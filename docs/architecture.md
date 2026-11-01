@@ -36,7 +36,7 @@
 | Integrations | `src/integrations` | Shopify GraphQL client + mapper, Odoo XML-RPC/JSON-RPC client + XML codec |
 | Persistence | `src/repositories`, `src/db` | SQL over a tiny `Db` interface (Postgres **and** embedded PGlite) |
 | Services | `src/services` | ingestion, validation, approval, publishing, Odoo gateway |
-| Interface | `src/routes`, `src/app.ts` | HTTP API, RBAC, audit, entry points |
+| Interface | `src/routes`, `src/app.ts` | HTTP API, RBAC, audit, entry points, public landing page |
 | Operations | `src/cli` | `sync`, `seed`, `migrate`, `schema:dump` |
 
 ## 2. The canonical model
@@ -173,7 +173,24 @@ while the instance stays warm.
 contract (the default export is used as the request listener of a plain Node
 HTTP server) so the failure cannot come back unnoticed.
 
-## 10. Security notes
+## 10. Public surface and authentication
+
+The authentication hook guards **only** the `/api/` namespace:
+
+| Path | Authentication |
+|---|---|
+| `/` | public — the landing page |
+| `/health`, `/ready` | public — the orchestrator probes |
+| `/docs`, `/docs/*` | public — the OpenAPI documentation |
+| `/api/**` | an API key is required, then the permission of the role |
+
+A request to an unknown route answers `404` (`{"error": "not_found"}`) and
+never `401`: a typo must not look like an authentication problem.  An unknown
+route under `/api/` still requires a key before it is reported as missing.
+The `401` payload carries a `hint` that names the public endpoints and the
+header to use.
+
+## 11. Security notes
 
 * The API keys are hashed; the plain text key only exists in the environment.
 * The audit trail records the actor, the role, the action, the entity, the

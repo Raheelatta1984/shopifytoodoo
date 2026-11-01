@@ -121,10 +121,13 @@ Runtime settings (threshold, Odoo ids, fallbacks) can also be changed through
 
 ## 7. API
 
-`GET /docs` serves the OpenAPI documentation once the service is running.
+`GET /` is the public landing page (it links to the probes and to the
+documentation) and `GET /docs` serves the OpenAPI documentation once the
+service is running.  The endpoints under `/api/` require an API key.
 
 | Method | Path | Permission |
 |---|---|---|
+| `GET` | `/` | public (landing page) |
 | `GET` | `/health`, `/ready` | public |
 | `GET` | `/api/v1/orders` | `order:read` |
 | `GET` | `/api/v1/orders/:id` | `order:read` |

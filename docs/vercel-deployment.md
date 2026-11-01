@@ -89,10 +89,15 @@ lost when the instance is recycled — always set `DATABASE_URL`.**
 ## 5. Verifying the deployment
 
 ```bash
-curl -s https://<your-deployment>/health
+curl -s https://<your-deployment>/            # the landing page (public)
+curl -s https://<your-deployment>/health      # the status (public)
 curl -s -o /dev/null -w "%{http_code}\n" https://<your-deployment>/docs
 curl -s -H "X-API-Key: $ADMIN_API_KEY" https://<your-deployment>/api/v1/orders
 ```
+
+`/` answers the landing page, `/health` the status and `/docs` the Swagger UI —
+none of them needs a key.  The API under `/api/` answers `401` with a `hint`
+when the `X-API-Key` header is missing.
 
 The deployment logs must not contain `Invalid export found` any more.
 

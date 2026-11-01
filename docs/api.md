@@ -2,7 +2,10 @@
 
 Base URL: `http://<host>:8080`
 Authentication: `X-API-Key: <key>` (or `Authorization: Bearer <key>`).
-Every request except `/health` and `/ready` needs a valid key.
+
+**Public endpoints** (no key): `/` (landing page), `/health`, `/ready`,
+`/docs` (Swagger UI) and `/docs/json`.
+**Protected endpoints**: everything under `/api/` — a valid key is required.
 
 The OpenAPI document is served at `/docs` (Swagger UI) and `/docs/json`.
 
@@ -24,9 +27,17 @@ The OpenAPI document is served at `/docs` (Swagger UI) and `/docs/json`.
 | `audit:read` | auditor, admin |
 | `user:manage` | admin |
 
-## Health
+## Public endpoints
+
+### `GET /`
+
+The landing page: it describes the service and links to the health probes and
+to the documentation.  It is what a browser sees when the deployment URL is
+opened.
 
 ### `GET /health`
+
+The liveness and dependency probe.
 
 ```json
 {
@@ -228,9 +239,23 @@ The audit entries of one order.
 | Status | `error` | Meaning |
 |---|---|---|
 | 400 | `invalid_request` | the body or the query is not valid |
-| 401 | `unauthorized` | the API key is missing or unknown |
+| 401 | `unauthorized` | the API key is missing or unknown (the payload carries a `hint`) |
 | 403 | `forbidden` | the role is not allowed to perform the action |
-| 404 | `not_found` | the order does not exist |
+| 404 | `not_found` | the route does not exist, or the order does not exist |
 | 409 | `not_configured` | Shopify or Odoo is not configured |
 | 422 | — | the validation or the approval gate blocked the operation |
 | 500 | `internal_error` | an unexpected error (the details are in the logs) |
+
+The `401` payload explains how to authenticate:
+
+```json
+{
+  "error": "unauthorized",
+  "message": "An API key is required (X-API-Key header)",
+  "hint": "Send the API key in the \"X-API-Key\" header (or \"Authorization: Bearer <key>\"). The public endpoints are /, /health, /ready and /docs."
+}
+```
+
+An unknown route answers `404` with
+`{"error": "not_found", "message": "The route GET /nope does not exist"}` —
+never `401`, so a typo is not mistaken for an authentication problem.
