@@ -1,11 +1,24 @@
 /**
  * HTTP application.
+ *
+ * The module has two entry points:
+ *
+ * - `buildApp(container)` builds a Fastify instance from an existing
+ *   container (used by the CLI, the tests and the standalone server).
+ * - the **default export** is a `(req, res)` request handler.  Serverless
+ *   platforms (Vercel, AWS Lambda, ...) load this module and require the
+ *   default export to be a function or a server; without it the launcher
+ *   aborts with "Invalid export found in module ... The default export must
+ *   be a function or server".
  */
+import type { IncomingMessage, ServerResponse } from 'node:http';
 import Fastify, { type FastifyInstance } from 'fastify';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import { z } from 'zod';
 import type { Container } from './container.js';
+import { loadConfig } from './config.js';
+import { createContainer } from './container.js';
 import { adminRoutes } from './routes/admin.js';
 import { healthRoutes } from './routes/health.js';
 import { orderRoutes } from './routes/orders.js';
@@ -80,4 +93,71 @@ export async function buildApp(
   await app.register(adminRoutes, { container });
 
   return app;
+}
+
+// ---------------------------------------------------------------------------
+// Serverless entry point
+// ---------------------------------------------------------------------------
+
+let serverPromise: Promise<FastifyInstance> | undefined;
+let serverContainer: Container | undefined;
+
+/**
+ * Lazily builds the application (and its container) for the serverless
+ * entry point.  The container is created on the first request and then
+ * reused for the lifetime of the warm instance.
+ */
+export async function getServer(): Promise<FastifyInstance> {
+  if (!serverPromise) {
+    serverPromise = (async () => {
+      const config = loadConfig();
+      const container = await createContainer(config);
+      await container.seed();
+      serverContainer = container;
+      const app = await buildApp(container);
+      await app.ready();
+      return app;
+    })().catch((error: unknown) => {
+      // A failed cold start must not poison the next invocation.
+      serverPromise = undefined;
+      serverContainer = undefined;
+      throw error;
+    });
+  }
+  return serverPromise;
+}
+
+/** Releases the container held by the serverless entry point. */
+export async function closeServer(): Promise<void> {
+  const pending = serverPromise;
+  const container = serverContainer;
+  serverPromise = undefined;
+  serverContainer = undefined;
+  if (pending) {
+    const app = await pending.catch(() => undefined);
+    if (app) await app.close();
+  }
+  if (container) await container.close();
+}
+
+/**
+ * The default export: a `(req, res)` request handler for the serverless
+ * platforms (Vercel, Lambda, ...) that load this module directly.
+ */
+export default async function handler(
+  req: IncomingMessage,
+  res: ServerResponse,
+): Promise<void> {
+  try {
+    const app = await getServer();
+    app.routing(req, res);
+  } catch (error) {
+    // The service could not start (the datastore is unreachable, ...).
+    const message = error instanceof Error ? error.message : 'unknown error';
+    if (!res.headersSent) {
+      res.statusCode = 503;
+      res.setHeader('Content-Type', 'application/json');
+    }
+    res.end(JSON.stringify({ error: 'unavailable', message }));
+  }
 }

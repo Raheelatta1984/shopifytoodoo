@@ -34,7 +34,7 @@ Shopify Admin API ──► central order tables ──► validation ──► 
 ```bash
 npm install
 npm run build
-npm test                       # 73 executable tests
+npm test                       # 79 executable tests
 npm run sync -- --dry-run     # downloads the fixture orders and validates them
 ```
 
@@ -148,10 +148,26 @@ Full reference: [docs/api.md](docs/api.md).
 | [docs/requirements-traceability.md](docs/requirements-traceability.md) | requirement → implementation → test traceability |
 | [docs/runbook.md](docs/runbook.md) | how to operate the solution day to day |
 | [docs/neon-setup.md](docs/neon-setup.md) | how to deploy on Neon (free tier) |
+| [docs/vercel-deployment.md](docs/vercel-deployment.md) | how to deploy as a serverless function (Vercel) |
 | [docs/schema.sql](docs/schema.sql) | the SQL schema, generated from the migrations |
 | `odoo/addons/shopify_to_odoo/` | the optional Odoo 19 addon that stores the Shopify provenance |
 
-## 9. Tests
+## 9. Deployment
+
+Two entry points are shipped, and both default-export a request handler so
+that the service runs unchanged as a long running server or as a serverless
+function:
+
+| Target | Command | Entry point |
+|---|---|---|
+| Node / Docker | `npm start` (or `docker compose up -d`) | `src/index.ts` → `dist/index.js` |
+| Serverless (Vercel, Lambda, …) | the platform loads the entry module | `src/app.ts` (default export) |
+
+The serverless entry point creates the container on the first request and
+reuses it while the instance stays warm; the details are in
+[docs/vercel-deployment.md](docs/vercel-deployment.md).
+
+## 10. Tests
 
 ```bash
 npm test                 # unit + integration
@@ -164,6 +180,6 @@ rules, the Odoo payload, the DMF generation, the XML-RPC codec, the Odoo
 addon, the full pipeline (download → validate → approve → publish → pickings)
 and the HTTP API with its role based access control.
 
-## 10. Licence
+## 11. Licence
 
 GNU General Public License v3.0 — see [LICENSE](LICENSE).
