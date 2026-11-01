@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+      - name: Coverage
+        run: npm run test:coverage
+
+      - name: Dump the schema
+        run: npm run schema:dump
+
+      - name: Validate the Odoo addon
+        run: |
+          python3 -m py_compile \
+            odoo/addons/shopify_to_odoo/__manifest__.py \
+            odoo/addons/shopify_to_odoo/__init__.py \
+            odoo/addons/shopify_to_odoo/models/__init__.py \
+            odoo/addons/shopify_to_odoo/models/sale_order.py
