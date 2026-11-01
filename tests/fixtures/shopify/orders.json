@@ -1,0 +1,455 @@
+{
+  "data": {
+    "orders": {
+      "pageInfo": { "hasNextPage": false, "endCursor": null },
+      "nodes": [
+        {
+          "id": "gid://shopify/Order/1001",
+          "legacyResourceId": 1001,
+          "name": "#1001",
+          "number": 1001,
+          "email": "jane.doe@example.com",
+          "phone": "+61 400 000 001",
+          "poNumber": null,
+          "createdAt": "2026-10-01T09:15:00Z",
+          "updatedAt": "2026-10-01T09:20:00Z",
+          "processedAt": "2026-10-01T09:15:00Z",
+          "currencyCode": "AUD",
+          "presentmentCurrencyCode": "AUD",
+          "sourceName": "web",
+          "sourceIdentifier": null,
+          "displayFinancialStatus": "PAID",
+          "displayFulfillmentStatus": "FULFILLED",
+          "paymentGatewayNames": ["shopify_payments"],
+          "note": "Leave at the front desk",
+          "tags": ["online", "priority"],
+          "test": false,
+          "currentSubtotalPriceSet": { "shopMoney": { "amount": "80.00", "currencyCode": "AUD" } },
+          "currentTotalTaxSet": { "shopMoney": { "amount": "7.20", "currencyCode": "AUD" } },
+          "currentTotalDiscountsSet": { "shopMoney": { "amount": "8.00", "currencyCode": "AUD" } },
+          "currentTotalPriceSet": { "shopMoney": { "amount": "79.20", "currencyCode": "AUD" } },
+          "totalShippingPriceSet": { "shopMoney": { "amount": "0.00", "currencyCode": "AUD" } },
+          "totalReceivedSet": { "shopMoney": { "amount": "79.20", "currencyCode": "AUD" } },
+          "totalRefundedSet": { "shopMoney": { "amount": "0.00", "currencyCode": "AUD" } },
+          "totalOutstandingSet": { "shopMoney": { "amount": "0.00", "currencyCode": "AUD" } },
+          "currentTaxLines": [
+            {
+              "title": "GST",
+              "taxable": true,
+              "percentage": 10,
+              "priceSet": { "shopMoney": { "amount": "7.20", "currencyCode": "AUD" } }
+            }
+          ],
+          "taxLines": [
+            {
+              "title": "GST",
+              "taxable": true,
+              "percentage": 10,
+              "priceSet": { "shopMoney": { "amount": "7.20", "currencyCode": "AUD" } }
+            }
+          ],
+          "customer": {
+            "id": "gid://shopify/Customer/42",
+            "legacyResourceId": 42,
+            "email": "jane.doe@example.com",
+            "firstName": "Jane",
+            "lastName": "Doe",
+            "phone": "+61 400 000 001",
+            "numberOfOrders": 3
+          },
+          "billingAddress": {
+            "name": "Jane Doe",
+            "firstName": "Jane",
+            "lastName": "Doe",
+            "company": null,
+            "address1": "12 Example Street",
+            "address2": null,
+            "city": "Sydney",
+            "province": "New South Wales",
+            "provinceCode": "NSW",
+            "zip": "2000",
+            "country": "Australia",
+            "countryCodeV2": "AU",
+            "phone": "+61 400 000 001"
+          },
+          "shippingAddress": {
+            "name": "Jane Doe",
+            "firstName": "Jane",
+            "lastName": "Doe",
+            "company": null,
+            "address1": "12 Example Street",
+            "address2": "Unit 4",
+            "city": "Sydney",
+            "province": "New South Wales",
+            "provinceCode": "NSW",
+            "zip": "2000",
+            "country": "Australia",
+            "countryCodeV2": "AU",
+            "phone": "+61 400 000 001"
+          },
+          "discountApplications": {
+            "nodes": [
+              {
+                "__typename": "DiscountCodeApplication",
+                "index": 0,
+                "allocationMethod": "ACROSS",
+                "targetSelection": "ALL",
+                "targetType": "LINE_ITEM",
+                "value": { "__typename": "PricingPercentageValue", "percentage": 10 },
+                "code": "SAVE10"
+              },
+              {
+                "__typename": "DiscountCodeApplication",
+                "index": 1,
+                "allocationMethod": "ENTIRE_ORDER",
+                "targetSelection": "ALL",
+                "targetType": "SHIPPING_LINE",
+                "value": { "__typename": "MoneyV2", "amount": "7.00", "currencyCode": "AUD" },
+                "code": "FREESHIP"
+              }
+            ]
+          },
+          "shippingLines": {
+            "nodes": [
+              {
+                "title": "Standard Shipping",
+                "carrierIdentifier": null,
+                "originalPriceSet": { "shopMoney": { "amount": "7.00", "currencyCode": "AUD" } },
+                "discountedPriceSet": { "shopMoney": { "amount": "0.00", "currencyCode": "AUD" } },
+                "taxLines": [
+                  {
+                    "title": "GST",
+                    "taxable": true,
+                    "percentage": 10,
+                    "priceSet": { "shopMoney": { "amount": "0.00", "currencyCode": "AUD" } }
+                  }
+                ],
+                "discountAllocations": [
+                  {
+                    "allocatedAmountSet": {
+                      "shopMoney": { "amount": "7.00", "currencyCode": "AUD" }
+                    },
+                    "discountApplication": {
+                      "index": 1,
+                      "allocationMethod": "ENTIRE_ORDER",
+                      "targetType": "SHIPPING_LINE",
+                      "value": { "__typename": "MoneyV2", "amount": "7.00", "currencyCode": "AUD" },
+                      "code": "FREESHIP"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "lineItems": {
+            "nodes": [
+              {
+                "id": "gid://shopify/LineItem/501",
+                "name": "Classic T-Shirt",
+                "title": "Classic T-Shirt",
+                "sku": "TSHIRT-CLASSIC",
+                "variantTitle": "Blue / M",
+                "quantity": 2,
+                "currentQuantity": 2,
+                "product": {
+                  "id": "gid://shopify/Product/11",
+                  "legacyResourceId": 11,
+                  "title": "Classic T-Shirt",
+                  "productType": "Apparel",
+                  "vendor": "Demo Brand"
+                },
+                "variant": {
+                  "id": "gid://shopify/ProductVariant/501",
+                  "legacyResourceId": 501,
+                  "sku": "TSHIRT-CLASSIC",
+                  "title": "Blue / M"
+                },
+                "originalUnitPriceSet": { "shopMoney": { "amount": "25.00", "currencyCode": "AUD" } },
+                "originalTotalSet": { "shopMoney": { "amount": "50.00", "currencyCode": "AUD" } },
+                "discountedTotalSet": { "shopMoney": { "amount": "45.00", "currencyCode": "AUD" } },
+                "totalDiscountSet": { "shopMoney": { "amount": "5.00", "currencyCode": "AUD" } },
+                "priceAfterAllDiscountsBeforeTaxesSet": {
+                  "shopMoney": { "amount": "45.00", "currencyCode": "AUD" }
+                },
+                "taxLines": [
+                  {
+                    "title": "GST",
+                    "taxable": true,
+                    "percentage": 10,
+                    "priceSet": { "shopMoney": { "amount": "4.50", "currencyCode": "AUD" } }
+                  }
+                ],
+                "discountAllocations": [
+                  {
+                    "allocatedAmountSet": {
+                      "shopMoney": { "amount": "5.00", "currencyCode": "AUD" }
+                    },
+                    "discountApplication": {
+                      "index": 0,
+                      "allocationMethod": "ACROSS",
+                      "targetType": "LINE_ITEM",
+                      "value": { "__typename": "PricingPercentageValue", "percentage": 10 },
+                      "code": "SAVE10"
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "gid://shopify/LineItem/502",
+                "name": "Canvas Tote Bag",
+                "title": "Canvas Tote Bag",
+                "sku": "TOTE-CANVAS",
+                "variantTitle": "Natural",
+                "quantity": 1,
+                "currentQuantity": 1,
+                "product": {
+                  "id": "gid://shopify/Product/12",
+                  "legacyResourceId": 12,
+                  "title": "Canvas Tote Bag",
+                  "productType": "Accessories",
+                  "vendor": "Demo Brand"
+                },
+                "variant": {
+                  "id": "gid://shopify/ProductVariant/502",
+                  "legacyResourceId": 502,
+                  "sku": "TOTE-CANVAS",
+                  "title": "Natural"
+                },
+                "originalUnitPriceSet": { "shopMoney": { "amount": "30.00", "currencyCode": "AUD" } },
+                "originalTotalSet": { "shopMoney": { "amount": "30.00", "currencyCode": "AUD" } },
+                "discountedTotalSet": { "shopMoney": { "amount": "27.00", "currencyCode": "AUD" } },
+                "totalDiscountSet": { "shopMoney": { "amount": "3.00", "currencyCode": "AUD" } },
+                "priceAfterAllDiscountsBeforeTaxesSet": {
+                  "shopMoney": { "amount": "27.00", "currencyCode": "AUD" }
+                },
+                "taxLines": [
+                  {
+                    "title": "GST",
+                    "taxable": true,
+                    "percentage": 10,
+                    "priceSet": { "shopMoney": { "amount": "2.70", "currencyCode": "AUD" } }
+                  }
+                ],
+                "discountAllocations": [
+                  {
+                    "allocatedAmountSet": {
+                      "shopMoney": { "amount": "3.00", "currencyCode": "AUD" }
+                    },
+                    "discountApplication": {
+                      "index": 0,
+                      "allocationMethod": "ACROSS",
+                      "targetType": "LINE_ITEM",
+                      "value": { "__typename": "PricingPercentageValue", "percentage": 10 },
+                      "code": "SAVE10"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "transactions": [
+            {
+              "id": "gid://shopify/OrderTransaction/9001",
+              "kind": "capture",
+              "status": "success",
+              "gateway": "shopify_payments",
+              "processedAt": "2026-10-01T09:16:00Z",
+              "errorMessage": null,
+              "receiptJson": "{}",
+              "test": false,
+              "amountSet": { "shopMoney": { "amount": "79.20", "currencyCode": "AUD" } },
+              "parentTransaction": null
+            }
+          ],
+          "fulfillments": [
+            {
+              "id": "gid://shopify/Fulfillment/7001",
+              "status": "SUCCESS",
+              "createdAt": "2026-10-01T11:00:00Z",
+              "updatedAt": "2026-10-01T11:00:00Z",
+              "trackingInfo": [{ "number": "TRACK-123", "url": "https://tracking.example/123" }],
+              "fulfillmentLineItems": [
+                { "quantity": 2, "lineItem": { "id": "gid://shopify/LineItem/501" } },
+                { "quantity": 1, "lineItem": { "id": "gid://shopify/LineItem/502" } }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gid://shopify/Order/1002",
+          "legacyResourceId": 1002,
+          "name": "#1002",
+          "number": 1002,
+          "email": "sam.smith@example.com",
+          "phone": null,
+          "poNumber": "PO-77",
+          "createdAt": "2026-10-02T02:05:00Z",
+          "updatedAt": "2026-10-02T02:06:00Z",
+          "processedAt": "2026-10-02T02:05:00Z",
+          "currencyCode": "AUD",
+          "presentmentCurrencyCode": "AUD",
+          "sourceName": "web",
+          "sourceIdentifier": null,
+          "displayFinancialStatus": "PARTIALLY_REFUNDED",
+          "displayFulfillmentStatus": "UNFULFILLED",
+          "paymentGatewayNames": ["shopify_payments"],
+          "note": null,
+          "tags": [],
+          "test": false,
+          "currentSubtotalPriceSet": { "shopMoney": { "amount": "25.00", "currencyCode": "AUD" } },
+          "currentTotalTaxSet": { "shopMoney": { "amount": "4.00", "currencyCode": "AUD" } },
+          "currentTotalDiscountsSet": { "shopMoney": { "amount": "0.00", "currencyCode": "AUD" } },
+          "currentTotalPriceSet": { "shopMoney": { "amount": "44.00", "currencyCode": "AUD" } },
+          "totalShippingPriceSet": { "shopMoney": { "amount": "15.00", "currencyCode": "AUD" } },
+          "totalReceivedSet": { "shopMoney": { "amount": "44.00", "currencyCode": "AUD" } },
+          "totalRefundedSet": { "shopMoney": { "amount": "13.75", "currencyCode": "AUD" } },
+          "totalOutstandingSet": { "shopMoney": { "amount": "0.00", "currencyCode": "AUD" } },
+          "currentTaxLines": [
+            {
+              "title": "GST",
+              "taxable": true,
+              "percentage": 10,
+              "priceSet": { "shopMoney": { "amount": "4.00", "currencyCode": "AUD" } }
+            }
+          ],
+          "taxLines": [
+            {
+              "title": "GST",
+              "taxable": true,
+              "percentage": 10,
+              "priceSet": { "shopMoney": { "amount": "4.00", "currencyCode": "AUD" } }
+            }
+          ],
+          "customer": {
+            "id": "gid://shopify/Customer/43",
+            "legacyResourceId": 43,
+            "email": "sam.smith@example.com",
+            "firstName": "Sam",
+            "lastName": "Smith",
+            "phone": null,
+            "numberOfOrders": 1
+          },
+          "billingAddress": {
+            "name": "Sam Smith",
+            "firstName": "Sam",
+            "lastName": "Smith",
+            "company": null,
+            "address1": "5 Other Road",
+            "address2": null,
+            "city": "Melbourne",
+            "province": "Victoria",
+            "provinceCode": "VIC",
+            "zip": "3000",
+            "country": "Australia",
+            "countryCodeV2": "AU",
+            "phone": null
+          },
+          "shippingAddress": {
+            "name": "Sam Smith",
+            "firstName": "Sam",
+            "lastName": "Smith",
+            "company": null,
+            "address1": "5 Other Road",
+            "address2": null,
+            "city": "Melbourne",
+            "province": "Victoria",
+            "provinceCode": "VIC",
+            "zip": "3000",
+            "country": "Australia",
+            "countryCodeV2": "AU",
+            "phone": null
+          },
+          "discountApplications": { "nodes": [] },
+          "shippingLines": {
+            "nodes": [
+              {
+                "title": "Express Shipping",
+                "carrierIdentifier": null,
+                "originalPriceSet": { "shopMoney": { "amount": "15.00", "currencyCode": "AUD" } },
+                "discountedPriceSet": { "shopMoney": { "amount": "15.00", "currencyCode": "AUD" } },
+                "taxLines": [
+                  {
+                    "title": "GST",
+                    "taxable": true,
+                    "percentage": 10,
+                    "priceSet": { "shopMoney": { "amount": "1.50", "currencyCode": "AUD" } }
+                  }
+                ],
+                "discountAllocations": []
+              }
+            ]
+          },
+          "lineItems": {
+            "nodes": [
+              {
+                "id": "gid://shopify/LineItem/601",
+                "name": "Enamel Mug",
+                "title": "Enamel Mug",
+                "sku": "MUG-ENAMEL",
+                "variantTitle": "Standard",
+                "quantity": 2,
+                "currentQuantity": 1,
+                "product": {
+                  "id": "gid://shopify/Product/13",
+                  "legacyResourceId": 13,
+                  "title": "Enamel Mug",
+                  "productType": "Homeware",
+                  "vendor": "Demo Brand"
+                },
+                "variant": {
+                  "id": "gid://shopify/ProductVariant/601",
+                  "legacyResourceId": 601,
+                  "sku": "MUG-ENAMEL",
+                  "title": "Standard"
+                },
+                "originalUnitPriceSet": { "shopMoney": { "amount": "12.50", "currencyCode": "AUD" } },
+                "originalTotalSet": { "shopMoney": { "amount": "25.00", "currencyCode": "AUD" } },
+                "discountedTotalSet": { "shopMoney": { "amount": "25.00", "currencyCode": "AUD" } },
+                "totalDiscountSet": { "shopMoney": { "amount": "0.00", "currencyCode": "AUD" } },
+                "priceAfterAllDiscountsBeforeTaxesSet": {
+                  "shopMoney": { "amount": "25.00", "currencyCode": "AUD" }
+                },
+                "taxLines": [
+                  {
+                    "title": "GST",
+                    "taxable": true,
+                    "percentage": 10,
+                    "priceSet": { "shopMoney": { "amount": "2.50", "currencyCode": "AUD" } }
+                  }
+                ],
+                "discountAllocations": []
+              }
+            ]
+          },
+          "transactions": [
+            {
+              "id": "gid://shopify/OrderTransaction/9101",
+              "kind": "capture",
+              "status": "success",
+              "gateway": "shopify_payments",
+              "processedAt": "2026-10-02T02:06:00Z",
+              "errorMessage": null,
+              "receiptJson": "{}",
+              "test": false,
+              "amountSet": { "shopMoney": { "amount": "44.00", "currencyCode": "AUD" } },
+              "parentTransaction": null
+            },
+            {
+              "id": "gid://shopify/OrderTransaction/9102",
+              "kind": "refund",
+              "status": "success",
+              "gateway": "shopify_payments",
+              "processedAt": "2026-10-03T01:00:00Z",
+              "errorMessage": null,
+              "receiptJson": "{}",
+              "test": false,
+              "amountSet": { "shopMoney": { "amount": "-13.75", "currencyCode": "AUD" } },
+              "parentTransaction": { "id": "gid://shopify/OrderTransaction/9101" }
+            }
+          ],
+          "fulfillments": []
+        }
+      ]
+    }
+  }
+}
