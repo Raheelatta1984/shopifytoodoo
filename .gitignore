@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Local data (embedded Postgres used when DATABASE_URL is not set)
+data/
+*.sqlite
+*.sqlite3
+
+# Local environment
+.env
+.env.local
+.env.*.local
+
+# Generated artefacts
+coverage/
+tmp/
+*.log
+npm-debug.log*
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
