@@ -1,0 +1,36 @@
+services:
+  shopifytoodoo:
+    build: .
+    image: shopifytoodoo:1.0.0
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      LOG_LEVEL: info
+      # Neon / managed Postgres
+      DATABASE_URL: ${DATABASE_URL:-}
+      DB_SSL: ${DB_SSL:-require}
+      # Embedded Postgres when DATABASE_URL is empty
+      PGLITE_PATH: /app/data/pglite
+      SHOPIFY_SHOP_DOMAIN: ${SHOPIFY_SHOP_DOMAIN:-}
+      SHOPIFY_ACCESS_TOKEN: ${SHOPIFY_ACCESS_TOKEN:-}
+      SHOPIFY_API_VERSION: ${SHOPIFY_API_VERSION:-2026-07}
+      SHOPIFY_FIXTURE: ${SHOPIFY_FIXTURE:-}
+      ODOO_URL: ${ODOO_URL:-}
+      ODOO_DB: ${ODOO_DB:-}
+      ODOO_USERNAME: ${ODOO_USERNAME:-admin}
+      ODOO_PASSWORD: ${ODOO_PASSWORD:-}
+      ODOO_PROTOCOL: ${ODOO_PROTOCOL:-xmlrpc}
+      ADMIN_API_KEY: ${ADMIN_API_KEY:-}
+      OPERATOR_API_KEY: ${OPERATOR_API_KEY:-}
+      APPROVER_API_KEY: ${APPROVER_API_KEY:-}
+      AUDITOR_API_KEY: ${AUDITOR_API_KEY:-}
+      APPROVAL_THRESHOLD_AMOUNT: ${APPROVAL_THRESHOLD_AMOUNT:-1000}
+      SUPPORTED_CURRENCIES: ${SUPPORTED_CURRENCIES:-AUD,USD,EUR,GBP,NZD,CAD,JPY}
+    volumes:
+      - shopifytoodoo-data:/app/data
+
+volumes:
+  shopifytoodoo-data:
