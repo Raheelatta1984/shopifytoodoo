@@ -16,6 +16,7 @@
     "schema:dump": "tsx src/db/dump-schema.cli.ts",
     "sync": "tsx src/cli/sync.ts",
     "seed": "tsx src/cli/seed.cli.ts",
+    "vercel:env": "tsx src/cli/vercel-env.cli.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
