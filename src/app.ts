@@ -20,6 +20,7 @@ import type { Container } from './container.js';
 import { adminRoutes } from './routes/admin.js';
 import { healthRoutes } from './routes/health.js';
 import { orderRoutes } from './routes/orders.js';
+import { publicRoutes } from './routes/public.js';
 import { AuthError, createAuthenticator } from './security/auth.js';
 
 export interface BuildAppOptions {
@@ -59,17 +60,24 @@ export async function buildApp(
 
   const authenticate = createAuthenticator(container.userRepo);
   app.addHook('preHandler', async (request) => {
-    // The health endpoints stay open so that orchestrators can probe them,
-    // and the API documentation is public so that it can be shared.
+    // Only the API is protected.  The landing page, the health probes and
+    // the documentation stay public (the orchestrators and the reviewers
+    // need them), and an unknown route must answer "not found" instead of
+    // "unauthorised", which used to hide a typo behind a 401.
     const url = request.url.split('?')[0] ?? '';
-    if (url === '/health' || url === '/ready') return;
-    if (url === '/docs' || url.startsWith('/docs/')) return;
+    if (!url.startsWith('/api/')) return;
     await authenticate(request);
   });
 
   app.setErrorHandler((error: Error & { statusCode?: number }, request, reply) => {
     if (error instanceof AuthError) {
-      return reply.code(error.statusCode).send({ error: 'unauthorized', message: error.message });
+      return reply.code(error.statusCode).send({
+        error: 'unauthorized',
+        message: error.message,
+        hint:
+          'Send the API key in the "X-API-Key" header (or "Authorization: Bearer <key>"). ' +
+          'The public endpoints are /, /health, /ready and /docs.',
+      });
     }
     if (error instanceof z.ZodError) {
       return reply.code(400).send({
@@ -86,6 +94,19 @@ export async function buildApp(
     });
   });
 
+  // An unknown route answers "not found" instead of "unauthorised"; an
+  // unknown route under /api still requires a key.
+  app.setNotFoundHandler(async (request, reply) => {
+    const url = request.url.split('?')[0] ?? '';
+    if (url.startsWith('/api/')) await authenticate(request);
+    return reply.code(404).send({
+      error: 'not_found',
+      message: `The route ${request.method} ${url} does not exist`,
+      hint: 'The API lives under /api/v1, the documentation is at /docs.',
+    });
+  });
+
+  await app.register(publicRoutes, { container });
   await app.register(healthRoutes, { container });
   await app.register(orderRoutes, { container });
   await app.register(adminRoutes, { container });
