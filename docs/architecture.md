@@ -36,7 +36,7 @@
 | Integrations | `src/integrations` | Shopify GraphQL client + mapper, Odoo XML-RPC/JSON-RPC client + XML codec |
 | Persistence | `src/repositories`, `src/db` | SQL over a tiny `Db` interface (Postgres **and** embedded PGlite) |
 | Services | `src/services` | ingestion, validation, approval, publishing, Odoo gateway |
-| Interface | `src/routes`, `src/app.ts` | HTTP API, RBAC, audit |
+| Interface | `src/routes`, `src/app.ts` | HTTP API, RBAC, audit, entry points |
 | Operations | `src/cli` | `sync`, `seed`, `migrate`, `schema:dump` |
 
 ## 2. The canonical model
@@ -147,7 +147,33 @@ lines, the discounts and the transactions are written together or not at all.
 | Odoo does not know the `x_shopify_*` fields | the creation is retried without them (the addon is optional) |
 | Odoo already has the order | the existing sale order is reused (the client order reference is the key) |
 
-## 9. Security notes
+## 9. The entry points
+
+The HTTP layer is reachable in three ways, all of them backed by the same
+Fastify instance:
+
+| Entry point | Used by | Shape |
+|---|---|---|
+| `src/server.ts` → `dist/server.js` | `npm start`, Docker | a long running server (`app.listen`) |
+| `src/app.ts` (default export) | Vercel, Lambda, any serverless platform | a `(req, res)` handler (`app.routing`) |
+| `src/index.ts` (default export) | the platforms that pick `index` as the entry | re-exports the handler above |
+| `buildApp(container)` | the CLI, the tests | the Fastify instance itself |
+
+The serverless platforms load the entry module and require its **default
+export** to be a function or a server; without it the launcher aborts before
+handling the first request ("Invalid export found in module … The default
+export must be a function or server").  `src/app.ts` therefore default-exports
+the request handler and `src/index.ts` re-exports it, so the deployment works
+whichever file the platform picks.  The container is created on the first
+request (the configuration and the container are loaded with a dynamic
+import, so importing the module never opens a database connection) and reused
+while the instance stays warm.
+
+`tests/integration/serverless-entrypoint.test.ts` replays the platform
+contract (the default export is used as the request listener of a plain Node
+HTTP server) so the failure cannot come back unnoticed.
+
+## 10. Security notes
 
 * The API keys are hashed; the plain text key only exists in the environment.
 * The audit trail records the actor, the role, the action, the entity, the

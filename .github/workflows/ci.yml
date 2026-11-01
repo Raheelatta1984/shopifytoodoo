@@ -34,6 +34,21 @@ jobs:
       - name: Dump the schema
         run: npm run schema:dump
 
+      - name: Check the serverless entry point contract
+        run: |
+          node --input-type=module -e "
+            import http from 'node:http';
+            for (const entry of ['./dist/app.js', './dist/index.js']) {
+              const mod = await import(entry);
+              const value = mod.default;
+              if (typeof value !== 'function' && !(value instanceof http.Server)) {
+                console.error('Invalid export found in module \"' + entry + '\".');
+                console.error('The default export must be a function or server.');
+                process.exit(1);
+              }
+            }
+          "
+
       - name: Validate the Odoo addon
         run: |
           python3 -m py_compile \

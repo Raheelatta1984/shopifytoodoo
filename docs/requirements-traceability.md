@@ -54,7 +54,7 @@ here and are referenced from the code (the validation rules carry the
 | REQ-006 | Given the agreed role and a valid input, the expected outcome occurs. | `tests/integration/api.test.ts` → *allows an approver to approve the order*, *publishes the order to Odoo* |
 | REQ-006 | Given an unauthorised request, the system prevents it and gives an auditable result. | `tests/integration/api.test.ts` → *refuses an approval from a role that is not allowed to approve* |
 | REQ-007 | The data classification, the least privilege access and the audit are validated. | `tests/integration/api.test.ts` → *refuses a request without an API key*, *refuses an unknown API key* |
-| REQ-008 | The dependency inventory and the interface contracts are validated. | `tests/unit/xmlrpc.test.ts`, `tests/unit/odoo-addon.test.ts` |
+| REQ-008 | The dependency inventory and the interface contracts are validated. | `tests/unit/xmlrpc.test.ts`, `tests/unit/odoo-addon.test.ts`, `tests/integration/serverless-entrypoint.test.ts` |
 | REQ-009 | The misuse, the failure and the recovery are validated. | `tests/integration/pipeline.test.ts` → *blocks the publish when the validation fails*, *publishing twice is idempotent* |
 | REQ-010 | The core end to end workflow is delivered first. | the whole suite |
 
