@@ -160,8 +160,8 @@ function:
 
 | Target | Command | Entry point |
 |---|---|---|
-| Node / Docker | `npm start` (or `docker compose up -d`) | `src/index.ts` → `dist/index.js` |
-| Serverless (Vercel, Lambda, …) | the platform loads the entry module | `src/app.ts` (default export) |
+| Node / Docker | `npm start` (or `docker compose up -d`) | `src/server.ts` → `dist/server.js` |
+| Serverless (Vercel, Lambda, …) | the platform loads the entry module | `src/app.ts` (default export) or `src/index.js` (re-export) |
 
 The serverless entry point creates the container on the first request and
 reuses it while the instance stays warm; the details are in

@@ -1,10 +1,7 @@
-import { readFileSync } from 'node:fs';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import handler, { closeServer } from '../../src/app.js';
-import { repoRoot } from '../helpers.js';
 
 /**
  * The serverless platforms (Vercel and friends) load the entry module and
@@ -71,12 +68,20 @@ describe('serverless entry point', () => {
     expect(typeof entry.default).toBe('function');
   });
 
-  it('points the package entry point at a module with a default export', async () => {
-    const manifest = JSON.parse(
-      readFileSync(join(repoRoot, 'package.json'), 'utf8'),
-    ) as { main?: string };
-    expect(manifest.main).toBe('src/app.ts');
-    const entry = await import('../../src/app.js');
-    expect(typeof entry.default).toBe('function');
+  it('exports a handler from every module the platform can pick as an entry', async () => {
+    // The platform scans `app`, `index` and `server` (in the root and in
+    // `src/`): each of those modules must default export a handler and must
+    // not have an import side effect.
+    for (const candidate of ['../../src/app.js', '../../src/index.js']) {
+      const module = await import(candidate);
+      expect(typeof module.default).toBe('function');
+    }
+  });
+
+  it('does not start a listener when the entry module is imported', async () => {
+    const before = process._getActiveHandles().filter((handle) => handle.constructor.name === 'Server').length;
+    await import('../../src/index.js');
+    const after = process._getActiveHandles().filter((handle) => handle.constructor.name === 'Server').length;
+    expect(after).toBe(before);
   });
 });

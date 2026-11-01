@@ -17,8 +17,6 @@ import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import { z } from 'zod';
 import type { Container } from './container.js';
-import { loadConfig } from './config.js';
-import { createContainer } from './container.js';
 import { adminRoutes } from './routes/admin.js';
 import { healthRoutes } from './routes/health.js';
 import { orderRoutes } from './routes/orders.js';
@@ -110,6 +108,12 @@ let serverContainer: Container | undefined;
 export async function getServer(): Promise<FastifyInstance> {
   if (!serverPromise) {
     serverPromise = (async () => {
+      // The configuration and the container are loaded on demand: importing
+      // this module must not open a database connection.
+      const [{ loadConfig }, { createContainer }] = await Promise.all([
+        import('./config.js'),
+        import('./container.js'),
+      ]);
       const config = loadConfig();
       const container = await createContainer(config);
       await container.seed();

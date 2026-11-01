@@ -27,7 +27,9 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
 ```
 
 `src/index.ts` re-exports the same handler, so the function works whichever of
-the two files the platform picks as the entry point.
+the two files the platform picks as the entry point.  Neither module has an
+import side effect: importing them starts no listener and opens no database
+connection (the container is created on the first request).
 
 The contract is protected by `tests/integration/serverless-entrypoint.test.ts`,
 which uses the default export as the request listener of a plain Node HTTP
@@ -43,15 +45,10 @@ server — exactly what the platform does.
 | Install command | `npm ci` |
 | Build command | `npm run build` (optional, the platform compiles the TypeScript entry) |
 
-`package.json#main` points at `src/app.ts` and `vercel.json` sets the maximum
-duration of the function to 60 seconds:
-
-```json
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functions": { "src/app.ts": { "maxDuration": 60 } }
-}
-```
+The platform scans `app`, `index` and `server` (in the root and in `src/`);
+`src/app.ts` is the first candidate, and `src/index.ts` re-exports the same
+handler as a fallback.  The maximum duration of the function (60 seconds) is
+set in the project settings.
 
 ## 3. Environment variables
 
@@ -79,7 +76,9 @@ lost when the instance is recycled — always set `DATABASE_URL`.**
 ## 4. Behaviour of the function
 
 * The container (and the database connection) is created on the **first
-  request** and reused while the instance stays warm.
+  request** and reused while the instance stays warm.  The configuration and
+  the container are loaded with a dynamic import, so the module can be loaded
+  without a database.
 * A failed cold start answers `503 {"error":"unavailable"}` instead of
   crashing, and the next invocation retries the initialisation.
 * The migrations run automatically when the container is created, so a fresh
