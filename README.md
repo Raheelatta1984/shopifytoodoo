@@ -34,7 +34,7 @@ Shopify Admin API ──► central order tables ──► validation ──► 
 ```bash
 npm install
 npm run build
-npm test                       # 72 executable tests
+npm test                       # 73 executable tests
 npm run sync -- --dry-run     # downloads the fixture orders and validates them
 ```
 
