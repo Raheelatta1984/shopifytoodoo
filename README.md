@@ -119,6 +119,17 @@ Copy `.env.example` to `.env`.  The most important variables:
 Runtime settings (threshold, Odoo ids, fallbacks) can also be changed through
 `PUT /api/v1/settings` without a redeploy.
 
+For a serverless deployment the variables are applied to the Vercel projects
+with the helper below (the secrets stay out of the repository):
+
+```bash
+cp .env.example .env.vercel.local     # edit it: DATABASE_URL, the API keys, …
+npm run vercel:env -- --env-file .env.vercel.local          # dry run
+npm run vercel:env -- --env-file .env.vercel.local --apply  # apply
+```
+
+The details are in [docs/vercel-deployment.md](docs/vercel-deployment.md).
+
 ## 7. API
 
 `GET /` is the public landing page (it links to the probes and to the

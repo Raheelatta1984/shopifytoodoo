@@ -73,6 +73,55 @@ Postgres (PGlite).  A serverless runtime has a read only filesystem outside of
 directory (and to an in memory database if that fails as well).  **The data is
 lost when the instance is recycled — always set `DATABASE_URL`.**
 
+### 3.1 Applying the variables with the CLI (recommended)
+
+The repository ships a helper that applies the variables to **both** Vercel
+projects (`shopifytoodoo` and `shopifytoodoo2`), for the **production** and
+the **preview** environments:
+
+```bash
+# 1. put the values in a local file (it is git ignored)
+cp .env.example .env.vercel.local
+#    then edit it: the Neon URL, the API keys, the Shopify and Odoo credentials
+
+# 2. see what would be done — nothing is changed
+npm run vercel:env -- --env-file .env.vercel.local
+
+# 3. apply (needs `vercel login` first, or a VERCEL_TOKEN in the environment)
+npm run vercel:env -- --env-file .env.vercel.local --apply
+```
+
+What the helper does:
+
+| Behaviour | Detail |
+|---|---|
+| targets | the two projects, for the `production` and the `preview` targets |
+| missing API keys | generated (`sto_…`, 48 hex characters) and reported in the dry run |
+| secrets | piped to `vercel env add` on **stdin**, so a value never appears in the process list nor in the shell history |
+| sensitive values | added with `--sensitive` (the dashboard shows them masked) |
+| missing variables | listed with the reason they are needed |
+
+Useful flags: `--project <name>` (one project only), `--target production` (one
+target only), `--env-file <path>` (defaults to the environment).
+
+The CLI needs a network route to `vercel.com`; the Vercel CLI itself is
+fetched on the fly by `npx`.
+
+### 3.2 Applying the variables in the dashboard
+
+1. Open the project → **Settings → Environment Variables**.
+2. Add the variables of the table above (the key of every production and
+   preview environment).
+3. Mark the secrets as **Sensitive**.
+4. **Redeploy** the project so that the new variables are picked up.
+
+### 3.3 Never in the repository
+
+`vercel.json`, `.env.example` and the repository must stay free of secrets:
+the API keys are only ever stored hashed in `app_user.api_key_hash`, and the
+connection strings only live in the Vercel project settings (and in the local,
+git ignored env file).
+
 ## 4. Behaviour of the function
 
 * The container (and the database connection) is created on the **first
